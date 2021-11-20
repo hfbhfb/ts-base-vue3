@@ -1,4 +1,4 @@
-
+// tsc index.ts --outDir out
 function Helloworld(content:string){
     console.log(content)
 }
