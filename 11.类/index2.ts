@@ -1,4 +1,4 @@
-
+// tsc index2.ts --outDir out
 
 abstract class Person{
     public name;
