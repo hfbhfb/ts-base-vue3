@@ -1,47 +1,63 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <h1 :style="{ background: color }">{{ count }}</h1>
+    <h1>计算属性 : {{ reverseCount }}</h1>
+    <button @click="Add(2)">增加</button>
+    <button @click="sendMsg()">发送信息到父组件</button>
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { Watch, Emit } from "vue-property-decorator";
+import { Options, Vue } from "vue-class-component";
 
 @Options({
   props: {
-    msg: String
-  }
+    msg: String,
+  },
+  // data() {
+  //   return {
+  //     count: 1,
+  //   };
+  // },
 })
 export default class HelloWorld extends Vue {
-  msg!: string
+  msg!: string;
+  count!: number;
+  color!: string;
+  constructor(props: any) {
+    super(props);
+    this.count = 39;
+  }
+  public Add(m: number): void {
+    this.count += m;
+  }
+  @Watch("count", { deep: true, immediate: true })
+  private onChangeCount(newValue: string, oldValue: string) {
+    console.log(newValue);
+    console.log(oldValue);
+    let red: number = Math.floor(Math.random() * 255);
+    let green: number = Math.floor(Math.random() * 255);
+    let blue: number = Math.floor(Math.random() * 255);
+    this.color = `rgba(${red},${green},${blue})`;
+  }
+  // 计算属性
+  public get reverseCount(): string {
+    return this.count.toString().split("").reverse().join("");
+  }
+  // 生命周期函数
+  public created(): void {
+    console.log("created");
+  }
+
+  public mounted(): void {
+    console.log("mounted");
+  }
+  @Emit("childEmit")
+  public sendMsg() {
+    return "你好父组件,我是子组件";
+  }
 }
 </script>
 
