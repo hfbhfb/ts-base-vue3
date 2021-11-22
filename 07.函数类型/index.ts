@@ -27,4 +27,20 @@ let mySearch:SearchFn = function(keyword,type){
 mySearch("a","b")
 
 
+function abcde(x:number):number;
+function abcde(x:string):string;
+function abcde(x:number|string):number|string{
+    if(typeof x == 'number'){
+        return x+6;
+    }else{
+        return x+ "何";
+    }
+}
+abcde(3)
+let m = 3
+// m = abcde("sfk")  // ts提示报错
+m = abcde(7)
+
+
+
 
